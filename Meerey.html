@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Приглашение для Мерей!</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(rgba(90,15,28,0.7), rgba(90,15,28,0.7)),
+              url('photo.jpeg');
+
+  background-size: cover;
+  background-position: center;
+
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 600px;
+  z-index: 2;
+}
+
+button {
+  padding: 12px 25px;
+  font-size: 18px;
+  margin: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.yes {
+  background: #ff4d6d;
+  color: white;
+}
+
+.no {
+  background: gray;
+  position: absolute;
+}
+
+.heart {
+  position: absolute;
+  color: #ff4d6d;
+  font-size: 20px;
+  animation: float 6s linear infinite;
+  z-index: 1;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10vh);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="start">
+  <h1 id="title"></h1>
+  <button onclick="start()">Узнать</button>
+</div>
+
+<div class="container" id="main" style="display:none;">
+  <p id="text1"></p>
+  <p id="text2"></p>
+  <h2 id="question"></h2>
+
+  <button class="yes" onclick="yes()">Согласна 💖</button>
+  <button class="no" id="noBtn" onmouseover="move()">Мне нужно подумать 🤔</button>
+</div>
+
+<script>
+// музыка
+let audio = new Audio("music.mp3");
+audio.loop = true;
+
+// печатающий текст
+function typeText(element, text, speed = 35) {
+  let i = 0;
+  function typing() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+  typing();
+}
+
+// стартовый текст
+typeText(document.getElementById("title"), "Приглашение для Мерей!");
+
+function start() {
+  document.getElementById("start").style.display = "none";
+  document.getElementById("main").style.display = "block";
+
+  audio.play();
+
+  typeText(document.getElementById("text1"),
+    "Обычное сообщение — это слишком просто. Поэтому мне захотелось сделать это немного по-другому :)"
+  );
+
+  setTimeout(() => {
+    typeText(document.getElementById("text2"),
+      "Я хочу провести с тобой больше времени"
+    );
+  }, 2500);
+
+  setTimeout(() => {
+    typeText(document.getElementById("question"),
+      "Пойдёшь со мной гулять?"
+    );
+  }, 4500);
+}
+
+function yes() {
+  document.body.innerHTML = `
+    <div class="container" id="finalSlide">
+      <h1 id="finalText">Ты только что сделала мой день лучше 🥹<br>Я капееец как рад!</h1>
+      <p>Нажми на текст, чтобы увидеть детали встречи 💌</p>
+    </div>
+  `;
+  hearts();
+
+  // клик по финальному сообщению → детали встречи
+  document.getElementById("finalText").addEventListener("click", showDetails);
+}
+
+function showDetails() {
+  document.body.innerHTML = `
+    <div class="container">
+      <h1>Детали нашей встречи 🫶🏻</h1>
+      <p>Когда: После школы</p>
+      <p>Место: Главные ворота школы</p>
+      <p>Время: После уроков</p>
+      <p>Дресс код: Свободный, главное чтобы тебе было удобно!</p>
+    </div>
+  `;
+  hearts();
+}
+
+// убегающая кнопка
+function move() {
+  let btn = document.getElementById("noBtn");
+  let x = Math.random() * (window.innerWidth - 150);
+  let y = Math.random() * (window.innerHeight - 50);
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
+}
+
+// сердечки
+function hearts() {
+  setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 6000);
+  }, 300);
+}
+
+// запуск сердечек
+hearts();
+</script>
+
+</body>
+</html>
